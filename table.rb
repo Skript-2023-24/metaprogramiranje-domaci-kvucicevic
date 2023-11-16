@@ -7,7 +7,7 @@ class Table
   def initialize(path)
     # @xlsx = Roo::Excelx.new(file_path)
     # @xlsx.default_sheet = @xlsx.sheets.first
-    @table = Roo::Spreadsheet.open(path, { :expand_merged_ranges => true })
+    @table = Roo::Spreadsheet.open(path, { expand_merged_ranges: true })
     @columns = initialize_cols
     @path = path
 
@@ -32,10 +32,11 @@ class Table
     headers = @table.row(1)
     headers.each_with_index do |header, index|
       column_values = @table.column(index + 1).drop(1)
-                        .reject(&:nil?)
-                        .map { |value| value.to_s =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ ? value.to_i : 0 }
+                            .reject(&:nil?) # ignorise null
+                            # .reject { |value| value.include?('total') } # ignorise total i subtotal
+                            .map { |value| value.to_s =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ ? value.to_i : 0 } # mapira vrednosti u stringove odredjenog oblika
 
-      columns[header.downcase.gsub(/\s+/, '')] = column_values unless column_values.empty?
+      columns[header.downcase.gsub(/\s+/, '')] = column_values unless column_values.empty? # setuje kolone, ignorise prazne
     end
     columns
   end
@@ -61,7 +62,12 @@ class Table
   #     @columns[column_name]
   # end
   def [](column_name)
-    Column.new(self, column_name, initialize_cols)
+    column_values = ''
+    @columns.each_key do |column_name|
+      column_values = @columns[column_name]
+    end
+
+    Column.new(self, column_name, column_values)
   end
 
   def get_cell_value(column_name, index)
@@ -109,14 +115,16 @@ class Table
         @columns[column_name]
       end
 
-      define_singleton_method("#{column_name}_sum") do
+      define_singleton_method("#{column_name}.sum") do
         @columns[column_name].map(&:to_i).sum
       end
 
-      define_singleton_method("#{column_name}_average") do
-        @columns[column_name].map(&:to_i).average
-      end
+      #define_singleton_method("#{column_name}.avg") do
+      #  @columns[column_name].map(&:to_i).avg
+      #end
     end
   end
+
+  # row.any? { |w| w.count('a-zA-Z').positive? } ? row.each { |el| @arr.push(el) } : row.map { |el| @arr.push(el.to_i) }
 
 end

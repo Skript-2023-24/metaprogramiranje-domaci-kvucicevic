@@ -31,8 +31,8 @@ p table1['drugakolona'][1]
 # Drugi deo, sumiranje i nov pristup koloni
 p 'suma prve kolone: '
 p table1.prvakolona.sum
-# p table1.trecakolona.average ideje nemam zasto ne radi
+# p table1.prvakolona.average #ideje nemam zasto ne radi
 
 p 'getting cell by value'
 value = 1
-p table1.prvakolona.value
+p table1.prvakolona.value # ostalo mi je jos ovo ii. kao i iii.

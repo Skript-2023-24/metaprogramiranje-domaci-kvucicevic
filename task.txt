@@ -17,9 +17,8 @@
 
    ii. Iz svake kolone može da se izvuče pojedinačni red na osnovu vrednosti jedne od ćelija.
    (smatraćemo da ta ćelija jedinstveno identifikuje taj red)
+    Primer sintakse: t.indeks.rn2310, ovaj kod će vratiti red studenta čiji je indeks rn2310
 
-    Primer sintakse: t.indeks.rn2310, ovaj kod će vratiti red studenta čiji je
-   indeks rn2310
    iii. Kolona mora da podržava funkcije kao što su map, select,reduce. Na primer:
    t.prvaKolona.map { |cell| cell+=1 }
 
